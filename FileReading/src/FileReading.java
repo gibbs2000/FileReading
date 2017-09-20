@@ -5,38 +5,51 @@ import java.util.Scanner;
 
 public class FileReading {
 
+	/**
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		// Checks if there is enough files as args
 		if (args.length < 4) {
 			System.out.println("You did not input enough files");
 			System.exit(1);
 		}
-		
-		//Creates the 3 files to be checked
+
+		// Creates the 3 files to be checked
 		Scanner file1 = fileToScanner(args[0], 1);
 		Scanner file2 = fileToScanner(args[1], 2);
 		Scanner file3 = fileToScanner(args[2], 3);
 
 		PrintWriter out = outputFile("output.txt");
 
+		// Step 1: check if braces are balanced
 		if (checkBraces(file1))
 			out.println("Braces Balanced");
 		else
 			out.println("Braces Not Balanced");
-		
-		
-		
-		
-		
-		
-		
-		//Closes all files
+
+		// Step 2: Display a blank line
+		out.println();
+
+		// Step 3: Compare Files
+
+		// Step 4: Display a blank line
+		out.println();
+
+		// Step 5: Storytime
+
+		// Closes all files
 		file1.close();
 		file2.close();
 		file3.close();
 		out.close();
 	}
 
+	/**
+	 * @param fName
+	 * @param fileNum
+	 * @return
+	 */
 	public static Scanner fileToScanner(String fName, int fileNum) {
 
 		File fileName = new File(fName);
@@ -53,6 +66,10 @@ public class FileReading {
 
 	}
 
+	/**
+	 * @param fName
+	 * @return
+	 */
 	public static PrintWriter outputFile(String fName) {
 		File fileName = new File(fName);
 
@@ -69,15 +86,35 @@ public class FileReading {
 		return output;
 	}
 
+	/**
+	 * @param toBeChecked
+	 * @return
+	 */
 	public static boolean checkBraces(Scanner toBeChecked) {
 		int numBraces = 0;
-		while (numBraces >= 0) {
-			if(toBeChecked.hasNextLine(){
-				if(toBeChecked.next())
+		while (numBraces >= 0 && toBeChecked.hasNextLine()) {
+			if (toBeChecked.hasNext("{"))
 				numBraces++;
-			}
+			if (toBeChecked.hasNext("}"))
+				numBraces--;
 		}
-		return false;
+		if (numBraces != 0)
+			return false;
+		return true;
+	}
+
+	
+	
+	
+	/**
+	 * @param f1
+	 * @param f2
+	 * @return
+	 */
+	public static boolean compareScanners(Scanner f1, Scanner f2) {
+		while(f1.hasNextLine()) {
+			
+		}
 	}
 
 }
