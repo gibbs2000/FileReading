@@ -23,7 +23,7 @@ public class FileReading {
 
 		PrintWriter out = outputFile("output.txt");
 
-		// Step 1: check if braces are balanced
+		// /////////////////////Step 1: check if braces are balanced//////
 		if (checkBraces(file1))
 			out.println("Braces Balanced");
 		else
@@ -136,49 +136,57 @@ public class FileReading {
 	 * @return
 	 */
 	public static boolean compareScanners(Scanner f1, Scanner f2) {
+		String s1 = "";
+		String s2 = "";
 		while (f1.hasNextLine() && f2.hasNextLine()) {
-			String l1 = f1.nextLine();
-			String l2 = f2.nextLine();
-			for (int i = 0; i < l1.length(); i++) {
-				if (!(l1.charAt(i) == l2.charAt(i))) {
-					return false;
-				}
+			s1 = s1 + f1.nextLine();
+			s2 = s2 + f2.nextLine();
 			}
-		}
-		return true;
+		return s1.equals(s2);
 	}
 
+	/**
+	 * @param file
+	 * @return
+	 */
 	public static ArrayList<String> getUserWords(Scanner file) {
 		ArrayList<String> words = new ArrayList<String>();
 		Scanner kb = new Scanner(System.in);
-		while (file.hasNext()) {
-			String line = file.next();
+		while (file.hasNextLine()) {
+			String line = file.nextLine();
 
-			if (line.indexOf("<") > -1 && line.indexOf(">") > -1) {
+			while (line.indexOf('<') > -1 && line.indexOf('>') > -1) {
 
-				String type = line.substring(line.indexOf("<") + 1, line.indexOf(">"));
+				String type = line.substring(line.indexOf('<') + 1, line.indexOf('>'));
 
 				System.out.println("Insert a " + type);
 
 				String userInput = kb.nextLine();
 				words.add(userInput);
+				line = line.substring(line.indexOf('>') + 1);
 
 			}
 		}
-		file.close();
+		file.reset();
 		kb.close();
 		return words;
 
 	}
 
+	/**
+	 * @param story
+	 * @param words
+	 * @param output
+	 */
 	public static void writeWords(Scanner story, ArrayList<String> words, PrintWriter output) {
 		for (String s : words) {
 			if (story.hasNextLine()) {
 				String line = story.nextLine();
 
-				while (line.indexOf("<") > -1 && line.indexOf(">") > -1) {
-					line = line.substring(0, line.indexOf("<")) + s + line.substring(line.indexOf(">"));
+				while (line.indexOf('<') > -1 && line.indexOf('>') > -1) {
+					line = line.substring(0, line.indexOf('<')) + s + line.substring(line.indexOf('>') + 1);
 				}
+				output.println(line);
 			}
 		}
 
