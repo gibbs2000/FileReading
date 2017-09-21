@@ -96,16 +96,25 @@ public class FileReading {
 	 * @return
 	 */
 	public static boolean checkBraces(Scanner toBeChecked) {
+
 		int numBraces = 0;
+
+		// Loops while there are lines left in the Scanner to be checked
 		while (numBraces >= 0 && toBeChecked.hasNextLine()) {
-			if (toBeChecked.hasNext("{"))
+			if (toBeChecked.hasNext("\\{")) {
 				numBraces++;
-			if (toBeChecked.hasNext("}"))
+			}
+			if (toBeChecked.hasNext("\\}")) {
 				numBraces--;
+
+			}
+			toBeChecked.nextLine();
+
 		}
 		if (numBraces != 0)
 			return false;
 		return true;
+
 	}
 
 	/**
@@ -116,7 +125,7 @@ public class FileReading {
 	public static boolean compareScanners(Scanner f1, Scanner f2) {
 		String s1 = f1.toString();
 		String s2 = f2.toString();
-		return s1.equals(f2);
+		return s1.equals(s2);
 	}
 
 }
