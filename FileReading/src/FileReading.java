@@ -47,14 +47,14 @@ public class FileReading {
 		// If less than 4 command line args are input, asks for user-submitted words to
 		// complete story
 		if (args.length < 4) {
-			out.println(writeStoryUser(file3));
+			writeWords(file3, getUserWords(file3), out);
 		}
 
 		// If 4 or more command line args are supplied, uses arg[3] to replace words in
 		// story
 		if (args.length > 4) {
 			Scanner file4 = fileToScanner(args[3], 4);
-			writeStoryArg(file3, file4);
+			// writeStoryArg(file3, file4);
 			file4.close();
 		}
 
@@ -148,14 +148,13 @@ public class FileReading {
 		return true;
 	}
 
-	public static String writeStoryUser(Scanner file) {
+	public static ArrayList<String> getUserWords(Scanner file) {
 		ArrayList<String> words = new ArrayList<String>();
 		Scanner kb = new Scanner(System.in);
+		while (file.hasNext()) {
+			String line = file.next();
 
-		while (file.hasNextLine()) {
-			String line = file.nextLine();
-
-			if (line.contains("<") && line.contains(">")) {
+			if (line.indexOf("<") > -1 && line.indexOf(">") > -1) {
 
 				String type = line.substring(line.indexOf("<") + 1, line.indexOf(">"));
 
@@ -166,22 +165,26 @@ public class FileReading {
 
 			}
 		}
-		StringBuffer editedStory = new StringBuffer();
-		while (file.hasNextLine()) {
-			editedStory.append(file.nextLine());
-		}
-
-		for (String s : words) {
-			if (editedStory.toString().contains("<") && editedStory.toString().contains(">"))
-				editedStory.replace(editedStory.indexOf("<"), editedStory.indexOf(">"), s);
-		}
+		file.close();
 		kb.close();
-
-		return new String(editedStory.toString());
+		return words;
 
 	}
 
-	public static void writeStoryArg(Scanner file3, Scanner file4) {
+	public static void writeWords(Scanner story, ArrayList<String> words, PrintWriter output) {
+		for (String s : words) {
+			if (story.hasNextLine()) {
+				String line = story.nextLine();
+
+				while (line.indexOf("<") > -1 && line.indexOf(">") > -1) {
+					line = line.substring(0, line.indexOf("<")) + s + line.substring(line.indexOf(">"));
+				}
+			}
+		}
+
+	}
+
+	public static void getArgsWords(Scanner file3, Scanner file4) {
 		// TODO Auto-generated method stub
 
 	}
