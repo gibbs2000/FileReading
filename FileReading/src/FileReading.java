@@ -33,12 +33,17 @@ public class FileReading {
 
 		// Step 3: Compare Files
 
+		if (compareScanners(file1, file2))
+			out.println("Files Identical");
+		else
+			out.println("Files Not Identical");
+
 		// Step 4: Display a blank line
 		out.println();
 
 		// Step 5: Storytime
 
-		// Closes all files
+		// Closes all open files
 		file1.close();
 		file2.close();
 		file3.close();
@@ -103,18 +108,15 @@ public class FileReading {
 		return true;
 	}
 
-	
-	
-	
 	/**
 	 * @param f1
 	 * @param f2
 	 * @return
 	 */
 	public static boolean compareScanners(Scanner f1, Scanner f2) {
-		while(f1.hasNextLine()) {
-			
-		}
+		String s1 = f1.toString();
+		String s2 = f2.toString();
+		return s1.equals(f2);
 	}
 
 }
