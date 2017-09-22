@@ -47,15 +47,18 @@ public class FileReading {
 		// If less than 4 command line args are input, asks for user-submitted words to
 		// complete story
 		if (args.length < 4) {
-			writeWords(file3, getUserWords(file3), out);
+			ArrayList<String> words = getUserWords(file3);
+			file3.close();
+			file3 = fileToScanner(args[2], 3);
+			writeWords(file3, words, out);
 		}
 
 		// If 4 or more command line args are supplied, uses arg[3] to replace words in
 		// story
 		if (args.length > 4) {
 			Scanner file4 = fileToScanner(args[3], 4);
-			// writeStoryArg(file3, file4);
-			file4.close();
+			ArrayList<String> words = getArgsWords(file4);
+			writeWords(file3, words, out);
 		}
 
 		// Closes all open files
@@ -141,7 +144,7 @@ public class FileReading {
 		while (f1.hasNextLine() && f2.hasNextLine()) {
 			s1 = s1 + f1.nextLine();
 			s2 = s2 + f2.nextLine();
-			}
+		}
 		return s1.equals(s2);
 	}
 
@@ -167,7 +170,7 @@ public class FileReading {
 
 			}
 		}
-		file.reset();
+		file.close();
 		kb.close();
 		return words;
 
@@ -179,21 +182,29 @@ public class FileReading {
 	 * @param output
 	 */
 	public static void writeWords(Scanner story, ArrayList<String> words, PrintWriter output) {
-		for (String s : words) {
-			if (story.hasNextLine()) {
-				String line = story.nextLine();
+		int i = 0;
+		while (story.hasNextLine() && i < words.size()) {
+			String line = story.nextLine();
 
-				while (line.indexOf('<') > -1 && line.indexOf('>') > -1) {
-					line = line.substring(0, line.indexOf('<')) + s + line.substring(line.indexOf('>') + 1);
-				}
-				output.println(line);
+			while (line.indexOf('<') > -1 && line.indexOf('>') > -1) {
+				line = line.substring(0, line.indexOf('<')) + words.get(i) + line.substring(line.indexOf('>') + 1);
+				i++;
 			}
+			output.println(line);
 		}
-
 	}
 
-	public static void getArgsWords(Scanner file3, Scanner file4) {
-		// TODO Auto-generated method stub
+	/**
+	 * @param file
+	 * @return
+	 */
+	public static ArrayList<String> getArgsWords(Scanner file) {
+		ArrayList<String> words = new ArrayList<String>();
+		while (file.hasNextLine()) {
+			words.add(file.nextLine());
 
+		}
+
+		return words;
 	}
 }
