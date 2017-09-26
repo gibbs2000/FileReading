@@ -4,6 +4,12 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+
+/**
+ * Provides a number of methods to test text files 
+ * @author gibbonss
+ *
+ */
 public class FileReading {
 
 	/**
@@ -72,12 +78,13 @@ public class FileReading {
 		// Loops while there are lines left in the Scanner to be checked
 		while (numBraces >= 0 && toBeChecked.hasNextLine()) {
 			String line = toBeChecked.nextLine();
-			if (line.contains("{")) {
-				numBraces++;
-			}
-			if (line.contains("}")) {
-				numBraces--;
-
+			for (int i = 0; i < line.length(); i++) {
+				if (line.charAt(i) == ('{')) {
+					numBraces++;
+				}
+				if (line.charAt(i) == ('}')) {
+					numBraces--;
+				}
 			}
 
 		}
@@ -97,13 +104,16 @@ public class FileReading {
 	public static boolean compareScanners(Scanner f1, Scanner f2) {
 		String s1 = "";
 		String s2 = "";
-		while (f1.hasNextLine()) {
+		boolean works = true;
+		if ((f1.hasNextLine() && !f2.hasNextLine()) || (!f1.hasNextLine() && f2.hasNextLine()))
+			works = false;
+		while (f1.hasNextLine() && f2.hasNextLine() && works) {
 			s1 = s1 + f1.nextLine();
-		}
-		while (f2.hasNextLine()) {
 			s2 = s2 + f2.nextLine();
+			if (!s1.equals(s2))
+				works = false;
 		}
-		return s1.equals(s2);
+		return works;
 	}
 
 	/**

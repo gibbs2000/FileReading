@@ -2,15 +2,20 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * Tests the FileReading class according to Homework Assignment 1
+ * @author gibbonss
+ *
+ */
 public class FileReadingTester {
 
 	/**
 	 * Tests the FileReading class
 	 * 
-	 * @param args
-	 *            1) Checks if braces are correctly balanced 2) Checks if matches
-	 *            the first file 3) Provides a story with placeholders to be removed
-	 *            by a given list or the user 4) (Optional) a list of words to fill
+	 * @param args The String file names of the files to be checked. 
+	 *            The first file is checked if braces are correctly balanced. The second is checked if matches
+	 *            the first file. The third provides a story with placeholders to be removed
+	 *            by a given list or the user. The optional fourth file is a list of words to fill
 	 *            placeholders (if absent or incomplete, asks the user for required
 	 *            input)
 	 */
