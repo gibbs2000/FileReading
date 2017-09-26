@@ -1,8 +1,10 @@
-storytime!
+Storytime!
 It was a <adjective> day.
+
+Jimmy was sitting in a <place>.
 
 Jimmy was very <adjective> because of his recent <noun>.
 
-Suddenly, a <noun> appeared and Jimmy was not longer <adjective>.
+Suddenly, a <noun> appeared and Jimmy was no longer <adjective>.
 
 Instead, he ate a <noun> and <verb in past tense>.

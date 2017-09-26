@@ -7,71 +7,14 @@ import java.util.Scanner;
 public class FileReading {
 
 	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		// Checks if there is enough files as args
-		if (args.length < 3) {
-			System.out.println("You did not input enough files");
-			System.exit(1);
-		}
-
-		// Creates the 3 files to be checked
-		Scanner file1 = fileToScanner(args[0], 1);
-		Scanner file2 = fileToScanner(args[1], 2);
-		Scanner file3 = fileToScanner(args[2], 3);
-
-		PrintWriter out = outputFile("output.txt");
-
-		// /////////////////////Step 1: check if braces are balanced//////
-		if (checkBraces(file1))
-			out.println("Braces Balanced");
-		else
-			out.println("Braces Not Balanced");
-
-		// Step 2: Display a blank line
-		out.println();
-
-		// Step 3: Compare Files
-
-		if (compareScanners(file1, file2))
-			out.println("Files Identical");
-		else
-			out.println("Files Not Identical");
-
-		// Step 4: Display a blank line
-		out.println();
-
-		// Step 5: Storytime
-
-		// If less than 4 command line args are input, asks for user-submitted words to
-		// complete story
-		if (args.length < 4) {
-			ArrayList<String> words = getUserWords(file3);
-			file3.close();
-			file3 = fileToScanner(args[2], 3);
-			writeWords(file3, words, out);
-		}
-
-		// If 4 or more command line args are supplied, uses arg[3] to replace words in
-		// story
-		if (args.length > 4) {
-			Scanner file4 = fileToScanner(args[3], 4);
-			ArrayList<String> words = getArgsWords(file4);
-			writeWords(file3, words, out);
-		}
-
-		// Closes all open files
-		file1.close();
-		file2.close();
-		file3.close();
-		out.close();
-	}
-
-	/**
+	 * Converts the given file to Scanner
+	 * 
 	 * @param fName
+	 *            The String name of a file
 	 * @param fileNum
-	 * @return
+	 *            The file number, used in case of exceptions or errors to tell user
+	 *            which file failed
+	 * @return A Scanner of the file with the given file name
 	 */
 	public static Scanner fileToScanner(String fName, int fileNum) {
 
@@ -85,13 +28,19 @@ public class FileReading {
 			return null;
 
 		}
+		if (!words.hasNext())
+			throw new IllegalArgumentException("Part" + fileNum + ": File is empty");
 		return words;
 
 	}
 
 	/**
+	 * Creates a file of the given name
+	 * 
 	 * @param fName
-	 * @return
+	 *            The name of the file to be created
+	 * @return A PrintWriter of the same name as fName which can be manipulated and
+	 *         then saved
 	 */
 	public static PrintWriter outputFile(String fName) {
 		File fileName = new File(fName);
@@ -110,8 +59,11 @@ public class FileReading {
 	}
 
 	/**
+	 * Checks if the braces in a given file are balanced
+	 * 
 	 * @param toBeChecked
-	 * @return
+	 *            The name of the file to be checked
+	 * @return A boolean on whether or not the braces are balanced
 	 */
 	public static boolean checkBraces(Scanner toBeChecked) {
 
@@ -134,23 +86,34 @@ public class FileReading {
 	}
 
 	/**
+	 * Compares two Scanner files to see if they are equal
+	 * 
 	 * @param f1
+	 *            The first file to be checked
 	 * @param f2
-	 * @return
+	 *            The second file to be checked
+	 * @return A boolean of whether or not the files are balanced
 	 */
 	public static boolean compareScanners(Scanner f1, Scanner f2) {
 		String s1 = "";
 		String s2 = "";
-		while (f1.hasNextLine() && f2.hasNextLine()) {
+		while (f1.hasNextLine()) {
 			s1 = s1 + f1.nextLine();
+		}
+		while (f2.hasNextLine()) {
 			s2 = s2 + f2.nextLine();
 		}
 		return s1.equals(s2);
 	}
 
 	/**
+	 * Gets an ArrayList of Strings from the user to replace specific placeholders
+	 * in a given Scanner file
+	 * 
 	 * @param file
-	 * @return
+	 *            A Scanner with placeholders (noted with &lt; and &gt;) to be
+	 *            replaced
+	 * @return An ArrayList of Strings made up of the user's responses
 	 */
 	public static ArrayList<String> getUserWords(Scanner file) {
 		ArrayList<String> words = new ArrayList<String>();
@@ -170,23 +133,43 @@ public class FileReading {
 
 			}
 		}
-		file.close();
 		kb.close();
 		return words;
 
 	}
 
 	/**
+	 * Rewrites a given Scanner file using an ArrayList of Strings to replace
+	 * certain placeholders, and prints the result into the given output file
+	 * 
 	 * @param story
+	 *            The Scanner file to be rewritten, removing placeholders
 	 * @param words
+	 *            An ArrayList of Strings to take the place of given placeholders in
+	 *            the Scanner file
 	 * @param output
+	 *            The output file for the rewritten file to be printed to
 	 */
 	public static void writeWords(Scanner story, ArrayList<String> words, PrintWriter output) {
 		int i = 0;
 		while (story.hasNextLine() && i < words.size()) {
 			String line = story.nextLine();
 
+			// Checks for input errors such as wrong placement of "<" or ">"
+			if (line.indexOf('<') > line.indexOf('>')) {
+				throw new IllegalArgumentException("The \">\" is before the \"<\"");
+			}
+
+			// Checks for input errors such as a missing < or >
+			if ((line.indexOf('<') > -1 && line.indexOf('<') == -1)
+					|| (line.indexOf('>') > -1 && line.indexOf('<') == -1)) {
+				throw new IllegalArgumentException("Missing a \"<\" or a \">\"");
+			}
+
+			// Steps through the file, removing placeholders and replacing them with the
+			// next String in the ArrayList
 			while (line.indexOf('<') > -1 && line.indexOf('>') > -1) {
+
 				line = line.substring(0, line.indexOf('<')) + words.get(i) + line.substring(line.indexOf('>') + 1);
 				i++;
 			}
@@ -195,8 +178,42 @@ public class FileReading {
 	}
 
 	/**
+	 * Checks if the number of placeholders is the same as the number of Strings in
+	 * an ArrayList (Used to check if user input is necessary)
+	 * 
+	 * @param story
+	 *            The Scanner file to be checked for number of placeholders
+	 * @param words
+	 *            The ArrayList of Strings which will replace the placeholders,
+	 *            checking if its size is enough to replace all the placeholders
+	 * @return Whether there are additional lines that have yet to be replaced and
+	 *         contain placeholders
+	 */
+	public static boolean checkWords(Scanner story, ArrayList<String> words) {
+		int i = 0;
+		while (story.hasNextLine() && i < words.size()) {
+			String line = story.nextLine();
+
+			while (line.indexOf('<') > -1 && line.indexOf('>') > -1) {
+				line = line.substring(0, line.indexOf('<')) + words.get(i) + line.substring(line.indexOf('>') + 1);
+				i++;
+			}
+		}
+
+		if (story.hasNextLine()) {
+			String line = story.nextLine();
+			if (line.indexOf('<') > -1 && line.indexOf('>') > -1)
+				return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Creates an ArrayList of Strings made up of all the lines from a given file
+	 * 
 	 * @param file
-	 * @return
+	 *            The Scanner file to be converted to an ArrayList
+	 * @return An ArrayList of Strings made up of all the lines from a given file
 	 */
 	public static ArrayList<String> getArgsWords(Scanner file) {
 		ArrayList<String> words = new ArrayList<String>();
